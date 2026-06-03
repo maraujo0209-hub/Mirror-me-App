@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    /* Target Environment Settings */
+    "target": "ES2022",                          /* Specify ECMAScript target version */
+    "module": "NodeNext",                        /* Specify module code generation style */
+    "moduleResolution": "NodeNext",              /* Determine how modules get resolved */
+    "lib": ["ES2022"],                           /* Specify library files to be included in the compilation */
+    
+    /* Build Directories Map */
+    "outDir": "./dist",                          /* Redirect output structure to the directory */
+    "rootDir": "./src",                          /* Specify the root directory of input files */
+    
+    /* Strict Code-Quality Standards */
+    "strict": true,                              /* Enable all strict type-checking options */
+    "noImplicitAny": true,                       /* Raise error on expressions and declarations with an implied 'any' type */
+    "strictNullChecks": true,                    /* Enable strict null checks */
+    "strictFunctionTypes": true,                 /* Enable strict checking of function types */
+    "noImplicitThis": true,                      /* Raise error on 'this' expressions with an implied 'any' type */
+    "alwaysStrict": true,                        /* Parse in strict mode and emit "use strict" for each source file */
+    
+    /* Additional Structural Inspections */
+    "noUnusedLocals": true,                      /* Report errors on unused locals */
+    "noUnusedParameters": true,                  /* Report errors on unused parameters */
+    "noImplicitReturns": true,                   /* Report error when not all code paths in function return a value */
+    "noFallthroughCasesInSwitch": true,           /* Report errors for fallthrough cases in switch statement */
+    
+    /* Interoperability & Module Mappings */
+    "esModuleInterop": true,                     /* Enables emit interoperability between CommonJS and ES Modules */
+    "experimentalDecorators": true,              /* Enables experimental support for ES7 decorators */
+    "emitDecoratorMetadata": true,               /* Enables experimental support for emitting type metadata for decorators */
+    "skipLibCheck": true,                        /* Skip type checking of declaration files (.d.ts) */
+    "forceConsistentCasingInFileNames": true,     /* Disallow inconsistently-cased references to the same file */
+    "resolveJsonModule": true                    /* Include modules imported with '.json' extension */
+  },
+  "include": [
+    "src/**/*"                                   /* Explicitly include all files inside the source tree */
+  ],
+  "exclude": [
+    "node_modules",                              /* Ignore external tracking packages folders */
+    "dist",                                      /* Ignore compiled build target assets */
+    "**/*.spec.ts",                              /* Ignore unit test code files during compilation loops */
+    "**/*.test.ts"
+  ]
+}
