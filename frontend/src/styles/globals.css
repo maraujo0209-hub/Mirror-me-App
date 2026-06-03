@@ -1,0 +1,88 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================================
+   1. GLOBAL SYSTEM INTERFACE RESET & BASE LAYER RULES
+   ============================================================================ */
+@layer base {
+  :root {
+    /* Set up consistent font variables mapped to your root layout definitions */
+    --font-sans: var(--font-inter), ui-sans-serif, system-ui, -apple-system, sans-serif;
+  }
+
+  html, body {
+    height: 100%;
+    scroll-behavior: smooth;
+    background-color: #020617; /* Solid fallback matching slate-950 */
+    color: #f1f5f9;            /* Slate-100 base text typography */
+  }
+
+  body {
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+  }
+
+  /* Optimize layout scrollbar tracking across web browsers */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+
+  ::-webkit-scrollbar-track {
+    background: #020617; /* Matches dashboard depths */
+  }
+
+  ::-webkit-scrollbar-thumb {
+    background: #1e293b; /* Slate-800 divider tracks */
+    border-radius: 9999px;
+  }
+
+  ::-webkit-scrollbar-thumb:hover {
+    background: #334155; /* Slate-700 active hover overlay state */
+  }
+}
+
+/* ============================================================================
+   2. CUSTOM ENGINE HARDWARE-ACCELERATED KEYFRAME ANIMATIONS
+   ============================================================================ */
+@layer utilities {
+  /* High-fidelity fluid fade-in utility sequence */
+  .animate-fadeIn {
+    animation: fadeInComponent 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  }
+
+  /* Suppress temporary layout jumps before structural initial entry hooks trigger */
+  .zero-opacity-layer {
+    opacity: 0;
+    animation: fadeInComponent 0.4s cubic-bezier(0.16, 1, 0.3, 1) 0.1s forwards;
+  }
+}
+
+@keyframes fadeInComponent {
+  from {
+    opacity: 0;
+    transform: translateY(4px); /* Tiny structural translation slide upwards */
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* ============================================================================
+   3. SYSTEM-WIDE SPECIAL UTILITY OVERRIDES
+   ============================================================================ */
+/* Enforce clear focus rings across interactive elements for superior accessibility profiles */
+*:focus-visible {
+  outline: 2px solid #4f46e5; /* Indigo-600 focus perimeter */
+  outline-offset: 2px;
+}
+
+/* Disable accidental image drag and drop loops inside dashboard preview grids */
+img {
+  user-select: none;
+  -webkit-user-drag: none;
+}
