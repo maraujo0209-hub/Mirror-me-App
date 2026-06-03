@@ -1,42 +1,29 @@
-name: Deploy Next.js site to Pages
+name: Consolidated CI/CD Pipeline
 on:
   push:
     branches: ["main"]
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
     steps:
-      # 1. You MUST check out the code first
       - uses: actions/checkout@v4
       
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 24 # Update from 20 to 24
-          cache: 'npm'
-          cache-dependency-path: 'package-lock.json'
-          
-      # 2. Navigate to frontend, install, and build
-      - name: Install and Build
+      # Build Frontend
+      - name: Build Frontend
         working-directory: ./frontend
         run: |
           npm install
           npm run build
           
-      # 3. Upload the 'out' folder created by the build
+      # Upload Artifacts
       - uses: actions/upload-pages-artifact@v3
         with:
           path: './frontend/out'
 
   deploy:
-    needs: build
+    needs: build-and-deploy
     runs-on: ubuntu-latest
-    environment:
-      name: github-pages
+    environment: { name: github-pages }
     steps:
       - uses: actions/deploy-pages@v4
