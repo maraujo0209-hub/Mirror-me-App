@@ -1,0 +1,84 @@
+version: '3.8'
+
+services:
+  # ============================================================================
+  # 1. PERSISTENT DATA STORAGE LAYER (MONGODB)
+  # ============================================================================
+  database:
+    container_name: mirror_me_database
+    image: mongo:6.0
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - mirror_me_network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+    restart: unless-stopped
+
+  # ============================================================================
+  # 2. RUNTIME LOGIC & API SERVER LAYER (NODE.JS / EXPRESS)
+  # ============================================================================
+  backend:
+    container_name: mirror_me_backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    environment:
+      - NODE_ENV=development
+      - PORT=5000
+      - MONGO_URI=mongodb://database:27017/mirror_me_db
+    env_file:
+      - .env
+    volumes:
+      - ./backend:/app
+      - /app/node_modules
+    networks:
+      - mirror_me_network
+    depends_on:
+      database:
+        condition: service_healthy
+    restart: unless-stopped
+
+  # ============================================================================
+  # 3. USER INTERFACE & PRESENTATION LAYER (NEXT.JS)
+  # ============================================================================
+  frontend:
+    container_name: mirror_me_frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost:5000
+    env_file:
+      - .env
+    volumes:
+      - ./frontend:/app
+      - /app/node_modules
+      - /app/.next
+    networks:
+      - mirror_me_network
+    depends_on:
+      - backend
+    restart: unless-stopped
+
+# ============================================================================
+# ISOLATED MESH NETWORKS & VOLUMES STORAGE METRICS
+# ============================================================================
+networks:
+  mirror_me_network:
+    driver: bridge
+
+volumes:
+  mongo_data:
+    driver: local
