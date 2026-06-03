@@ -1,7 +1,7 @@
 name: Deploy Next.js site to Pages
 on:
   push:
-    branches: ["main"] # Ensure this matches your default branch name
+    branches: ["main"]
 
 permissions:
   contents: read
@@ -12,17 +12,26 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      # 1. You MUST check out the code first
+      - uses: actions/checkout@v4
+      
       - uses: actions/setup-node@v4
         with:
           node-version: 20
           cache: 'npm'
-          # Change this path to point to your root-level lockfile
           cache-dependency-path: 'package-lock.json'
-      - run: npm install
-      - run: npm run build # This creates the 'out' folder
+          
+      # 2. Navigate to frontend, install, and build
+      - name: Install and Build
+        working-directory: ./frontend
+        run: |
+          npm install
+          npm run build
+          
+      # 3. Upload the 'out' folder created by the build
       - uses: actions/upload-pages-artifact@v3
         with:
-          path: './frontend/out' # Adjust if your 'out' folder is elsewhere
+          path: './frontend/out'
 
   deploy:
     needs: build
